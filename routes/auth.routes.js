@@ -12,7 +12,7 @@ router.get("/", (req, res, next) => {
 //should match SessionContext fetch url
 //has to be updated!!
 router.get("/verify", (req, res, next) => {
-  res.json("All good in here");
+  res.json("All good in here session context");
 });
 
 router.post("/signup", async (req, res, next) => {
@@ -53,5 +53,6 @@ router.get('/verify', isAuthenticated, async (req, res) => {
   const user = await User.findById(req.pizza.userId)
   res.status(200).json({ message: 'User is authenticated', user })
 })
+
 
 module.exports = router;

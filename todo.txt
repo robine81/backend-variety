@@ -1,0 +1,4 @@
+1. separate authentication routes for admin and artist
+2. attach isAdmin to authentication routes
+3. extend PrivateRoutes component (or create a new compontent) to check that user is admin
+4. if admin display signup option
