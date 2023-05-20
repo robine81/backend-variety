@@ -35,6 +35,20 @@ router.get("/", async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500);
+    res.send();
+  }
+});
+
+router.delete("/:eventId", async (req, res, next) => {
+  try {
+    const { eventId } = req.params;
+    await EventModel.findByIdAndDelete(eventId);
+    res.status(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  } finally {
+    res.send();
   }
 });
 
