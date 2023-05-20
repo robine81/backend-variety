@@ -1,22 +1,26 @@
 const { Schema, model } = require("mongoose");
+const Artist = require("./Artist.model");
 
-const eventSchema = new Schema(
-  {
-    eventName : {
-        type: String,
-        required: true,
+const eventSchema = new Schema({
+  eventName: {
+    type: String,
+    required: true,
+  },
+  location: String,
+  date: {
+    type: Date,
+    required: true,
+  },
+
+  artworkUrl: String,
+  lineUp: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: Artist,
     },
-    location: String,
-    date: {
-        type: Date,
-        required: true,
-    },
-    time: Number,
-    artworkUrl: String,
-    lineUp: [String],
-    ticketPrice: Number,
-  }
-);
+  ],
+  ticketPrice: Number,
+});
 
 const Event = model("Event", eventSchema);
 
