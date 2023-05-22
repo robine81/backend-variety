@@ -2,6 +2,7 @@ const router = require("express").Router();
 const { Types } = require("mongoose");
 const EventModel = require("../models/Event.models");
 const { startOfDay, endOfDay } = require("date-fns");
+const { isAuthenticated } = require("../middleware/isAuthenticated");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -40,7 +41,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.delete("/:eventId", async (req, res, next) => {
+router.delete("/:eventId", isAuthenticated, async (req, res, next) => {
   try {
     const { eventId } = req.params;
     await EventModel.findByIdAndDelete(eventId);
@@ -52,7 +53,7 @@ router.delete("/:eventId", async (req, res, next) => {
     res.send();
   }
 });
-router.put("/:eventId", async (req, res) => {
+router.put("/:eventId", isAuthenticated, async (req, res) => {
   const { eventId } = req.params;
   const payload = req.body;
   try {
@@ -65,7 +66,7 @@ router.put("/:eventId", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", isAuthenticated, async (req, res, next) => {
   const payload = req.body;
 
   try {
