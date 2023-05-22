@@ -65,4 +65,16 @@ router.put("/:eventId", async (req, res) => {
   }
 });
 
+router.post("/", async (req, res, next) => {
+  const payload = req.body;
+
+  try {
+    const addEvent = await EventModel.create(payload);
+    res.status(201).json(addEvent);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
 module.exports = router;
