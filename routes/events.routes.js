@@ -19,6 +19,7 @@ router.get("/", async (req, res, next) => {
           : {}),
         ...(req.query.date
           ? {
+              // https://stackoverflow.com/a/27641025
               date: {
                 $gte: startOfDay(new Date(req.query.date)),
                 $lte: endOfDay(new Date(req.query.date)),
@@ -49,6 +50,18 @@ router.delete("/:eventId", async (req, res, next) => {
     res.status(500);
   } finally {
     res.send();
+  }
+});
+router.put("/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const payload = req.body;
+  try {
+    const updatedEvent = await EventModel.findByIdAndUpdate(eventId, payload, {
+      new: true,
+    });
+    res.status(200).json(updatedEvent);
+  } catch (error) {
+    console.log(error);
   }
 });
 
