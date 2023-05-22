@@ -30,12 +30,6 @@ app.use('/artists', artistsRoutes)
 const eventsRoutes = require('./routes/events.routes')
 app.use('/events', eventsRoutes)
 
-const addArtistRoutes = require('./routes/addArtist.routes')
-app.use('/add-artist', addArtistRoutes)
-
-const addEventRoutes = require('./routes/addEvent.routes')
-app.use('/add-event', addEventRoutes)
-
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
