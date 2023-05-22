@@ -9,11 +9,12 @@ router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
 
-//should match SessionContext fetch url
-//has to be updated!!
-router.get("/verify", (req, res, next) => {
-  res.json("All good in here session context");
-});
+// GET to verify
+router.get('/verify', isAuthenticated, async (req, res) => {
+  const user = await User.findById(req.payload.userId)
+  console.log(user)
+  res.status(200).json({ message: 'User is authenticated', user })
+})
 
 router.post("/signup", async (req, res, next) => {
   const salt = bcrypt.genSaltSync(9)
@@ -30,27 +31,33 @@ router.post("/signup", async (req, res, next) => {
 // POST to login
 router.post('/login', async (req, res) => {
   // Does user exists
-  const potentialUser = await User.findOne({ email: req.body.email })
-  if (potentialUser) {
-    // Is the password correct
+  // Is the password correct
+  try {
+    const potentialUser = await User.findOne({ email: req.body.email })
+    if (potentialUser) {
     if (bcrypt.compareSync(req.body.password, potentialUser.password)) {
-      // Password IS correct
-      const authToken = jwt.sign({ userId: potentialUser._id }, process.env.TOKEN_SECRET, {
-        algorithm: 'HS256',
-        expiresIn: '6h',
-      })
-      res.json(authToken)
+        // Password IS correct
+        const authToken = jwt.sign({ expiresIn: '6h', userId: potentialUser._id }, process.env.TOKEN_SECRET, {
+          algorithm: 'HS256',
+        })
+        res.status(200).json(authToken)
+      } else {
+        // If password is wrong
+
+        res.status(401).json({ errorMessage: 'Wrong password' })
+      }
     } else {
-      // Password ISN'T correct
-    }
-  } else {
-    // No user found
+      // If we don't have a user with the given username
+      res.status(404).json({ errorMessage: 'User does not exists' })
+    }}
+  catch(err){
+    console.err(err)
   }
 })
 
 // GET to verify
 router.get('/verify', isAuthenticated, async (req, res) => {
-  const user = await User.findById(req.pizza.userId)
+  const user = await User.findById(req.payload.userId)
   res.status(200).json({ message: 'User is authenticated', user })
 })
 
