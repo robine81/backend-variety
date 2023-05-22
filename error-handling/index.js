@@ -11,11 +11,14 @@ module.exports = (app) => {
 
     // only render if the error ocurred before sending the response
     if (!res.headersSent) {
-      res
-        .status(500)
-        .json({
-          message: "Internal server error. Check the server console",
+      if (err.code === "credentials_required") {
+        res.status(401).json({
+          message: "No authorization token was found",
         });
+      }
+      res.status(500).json({
+        message: "Internal server error. Check the server console",
+      });
     }
   });
 };
