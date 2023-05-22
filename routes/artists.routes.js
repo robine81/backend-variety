@@ -78,7 +78,7 @@ router.post('/add-artist', async (req, res, next) => {
   } 
 })
 
-router.delete("/delete/:id", async (req, res, next) => {
+router.delete("/:artistId", async (req, res, next) => {
   try {
     const { artistId } = req.params;
     await Artist.findByIdAndDelete(artistId);
@@ -90,7 +90,7 @@ router.delete("/delete/:id", async (req, res, next) => {
     res.send();
   }
 });
-router.put("/update/:id", async (req, res) => {
+router.put("/:artistId", async (req, res) => {
   const { artistId } = req.params;
   const payload = req.body;
   try {
