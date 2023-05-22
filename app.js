@@ -30,9 +30,12 @@ app.use("/artists", artistsRoutes);
 const eventsRoutes = require("./routes/events.routes");
 app.use("/events", eventsRoutes);
 
+<<<<<<< HEAD
 const addArtistRoutes = require("./routes/addArtist.routes");
 app.use("/add-artist", addArtistRoutes);
 
+=======
+>>>>>>> AllArtistsBackend
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
