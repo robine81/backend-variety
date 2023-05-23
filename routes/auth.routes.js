@@ -12,7 +12,7 @@ router.get("/", (req, res, next) => {
 // GET to verify
 router.get('/verify', isAuthenticated, async (req, res) => {
   const user = await User.findById(req.payload.userId)
-  console.log(user)
+  console.log("This is the user:  ", user)
   res.status(200).json({ message: 'User is authenticated', user })
 })
 
