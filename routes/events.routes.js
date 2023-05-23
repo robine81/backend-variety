@@ -78,4 +78,15 @@ router.post("/", isAuthenticated, async (req, res, next) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const oneEvent = await EventModel.findById(id).populate("lineUp");
+    res.json(oneEvent);
+  } catch (error) {
+    console.error(error);
+    res.status(500);
+  }
+});
+
 module.exports = router;
