@@ -45,7 +45,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post('/add', async (req, res, next) => {
+router.post('/add', isAuthenticated, async (req, res, next) => {
   try {
     const { 
       artistName,
@@ -78,7 +78,7 @@ router.post('/add', async (req, res, next) => {
   } 
 })
 
-router.delete("/:artistId", async (req, res, next) => {
+router.delete("/:artistId", isAuthenticated, async (req, res, next) => {
   try {
     const { artistId } = req.params;
     await Artist.findByIdAndDelete(artistId);
@@ -90,7 +90,7 @@ router.delete("/:artistId", async (req, res, next) => {
     res.send();
   }
 });
-router.put("/:artistId", async (req, res) => {
+router.put("/:artistId", isAuthenticated, async (req, res) => {
   const { artistId } = req.params;
   const payload = req.body;
   try {
