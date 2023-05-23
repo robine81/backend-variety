@@ -45,7 +45,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post('/add-artist', async (req, res, next) => {
+router.post('/add', async (req, res, next) => {
   try {
     const { 
       artistName,
