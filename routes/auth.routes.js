@@ -43,7 +43,6 @@ router.post('/login', async (req, res) => {
         res.status(200).json(authToken)
       } else {
         // If password is wrong
-
         res.status(401).json({ errorMessage: 'Wrong password' })
       }
     } else {
