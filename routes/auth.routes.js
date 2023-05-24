@@ -31,34 +31,36 @@ router.post("/signup", async (req, res, next) => {
 
 // POST to login
 router.post("/login", async (req, res) => {
-  // Does user exists
-  const potentialUser = await User.findOne({ email: req.body.email });
-  if (potentialUser) {
-    // Is the password correct
-    if (bcrypt.compareSync(req.body.password, potentialUser.password)) {
-      // Password IS correct
-      const authToken = jwt.sign(
-        { userId: potentialUser._id },
-        process.env.TOKEN_SECRET,
-        {
-          algorithm: "HS256",
-          expiresIn: "6h",
-        }
-      );
-      res.json({
-        authToken,
-        user: {
-          id: potentialUser._id,
-          email: potentialUser.email,
-          firstName: potentialUser.firstName,
-          lastName: potentialUser.lastName,
-        },
-      });
+  try {
+    const potentialUser = await User.findOne({ email: req.body.email });
+
+    if (potentialUser) {
+      if (bcrypt.compareSync(req.body.password, potentialUser.password)) {
+        const authToken = jwt.sign(
+          { userId: potentialUser._id },
+          process.env.TOKEN_SECRET,
+          {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          }
+        );
+        res.json({
+          authToken,
+          user: {
+            id: potentialUser._id,
+            email: potentialUser.email,
+            firstName: potentialUser.firstName,
+            lastName: potentialUser.lastName,
+          },
+        });
+      } else {
+        res.status(401).json({ errorMessage: "Wrong password, try again" });
+      }
     } else {
-      // Password ISN'T correct
+      res.status(401).json({ errorMessage: "Invalid user" });
     }
-  } else {
-    // No user found
+  } catch (error) {
+    console.log(error);
   }
 });
 
