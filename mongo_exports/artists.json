@@ -1,0 +1,210 @@
+{
+  "type": "object",
+  "x-bsonType": "object",
+  "required": [
+    "_id",
+    "__v",
+    "artistName",
+    "artistPicUrl",
+    "beatPortUrl",
+    "facebookUrl",
+    "firstName",
+    "instagramUrl",
+    "lastName",
+    "soundCloudUrl",
+    "webPage"
+  ],
+  "properties": {
+    "_id": {
+      "$ref": "#/$defs/ObjectId",
+      "x-bsonType": "objectId",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "6470681016d0658515ca8638",
+        "647067a516d0658515ca8630",
+        "6470686616d0658515ca8640",
+        "6470684516d0658515ca863c",
+        "647067e616d0658515ca8634"
+      ]
+    },
+    "__v": {
+      "type": "integer",
+      "x-bsonType": "int",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "artistName": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "Nora en Pure",
+        "Delorean",
+        "Ele Luz",
+        "Robosonic",
+        "Oliver Koletzski"
+      ]
+    },
+    "artistPicUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUVFRgVFRUYGBgZGhkaGhgaGhkYHBkZGBoZHBgaG",
+        "https://static.ra.co/images/profiles/delorean-ar.jpg?dateUpdated=1564058208000",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBYWFRgWFhYZGRgaGRwZGBwYGBgYGBgYHBgcGRgYG",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBIREhgSEhQYGBgZGhkZGBgYGBIaFRgcGBgcGRkYG",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUSEhIVFRUVFRUVFRUVFRUVFRUVFRUWFhUVF"
+      ]
+    },
+    "beatPortUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "facebookUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "firstName": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "No",
+        "Fede",
+        "Elena",
+        "Cord ",
+        "Oliver"
+      ]
+    },
+    "instagramUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    "lastName": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "Ra",
+        "Rico",
+        "Luz",
+        "Labuhn",
+        "Koletzki"
+      ]
+    },
+    "soundCloudUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "",
+        "https://soundcloud.com/trommelmusic/delorean-trommel-insession-046",
+        "",
+        "",
+        ""
+      ]
+    },
+    "webPage": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 5
+      },
+      "x-sampleValues": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "$defs": {
+    "ObjectId": {
+      "type": "object",
+      "properties": {
+        "$oid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        }
+      },
+      "required": [
+        "$oid"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

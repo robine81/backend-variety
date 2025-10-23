@@ -1,0 +1,229 @@
+{
+  "type": "object",
+  "x-bsonType": "object",
+  "required": [
+    "_id",
+    "__v",
+    "date",
+    "eventName",
+    "location"
+  ],
+  "properties": {
+    "_id": {
+      "$ref": "#/$defs/ObjectId",
+      "x-bsonType": "objectId",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 7
+      },
+      "x-sampleValues": [
+        "66a0e45a6042bf852769eb43",
+        "6687cec67f6b51d4821f169d",
+        "66a0e27e6042bf852769eb41",
+        "667e6e97dc71d2ce4dffcb4b",
+        "6470690c16d0658515ca8648",
+        "6470694116d0658515ca8654",
+        "6470696c16d0658515ca8660"
+      ]
+    },
+    "__v": {
+      "type": "integer",
+      "x-bsonType": "int",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 7
+      },
+      "x-sampleValues": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "artworkUrl": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.5714285714285714,
+        "count": 4
+      },
+      "x-sampleValues": [
+        "",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTEhMVFhUVFxUXFhcXFhcVFxUYFhUWFhUVG",
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMTEhUTExMWFhUXGBcaGBgYGRgaGxodFx0XFx0dG",
+        "https://images.ra.co/94bef5369e2116cada3df9a54a884f9e1b15426e.jpg"
+      ]
+    },
+    "createdAt": {
+      "$ref": "#/$defs/Date",
+      "x-bsonType": "date",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.42857142857142855,
+        "count": 3
+      },
+      "x-sampleValues": [
+        "2024-07-24T11:24:10.237Z",
+        "2024-07-05T10:45:26.614Z",
+        "2024-07-24T11:16:14.654Z"
+      ]
+    },
+    "date": {
+      "$ref": "#/$defs/Date",
+      "x-bsonType": "date",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 7
+      },
+      "x-sampleValues": [
+        "2024-07-27T00:00:00.000Z",
+        "2024-07-07T00:00:00.000Z",
+        "2024-07-26T00:00:00.000Z",
+        "2024-06-29T22:00:00.000Z",
+        "2023-06-07T22:00:00.000Z",
+        "2023-05-31T22:00:00.000Z",
+        "2023-06-14T22:00:00.000Z"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.42857142857142855,
+        "count": 3
+      },
+      "x-sampleValues": [
+        "aasdasd",
+        "asdasdasd",
+        "asd"
+      ]
+    },
+    "eventName": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": false,
+        "probability": 1,
+        "count": 7
+      },
+      "x-sampleValues": [
+        "asdasd",
+        "Event1",
+        "asd",
+        "New event",
+        "CIRCUS VARIETY with Heimlich Knüller, Frida Darko, Karim Alkhayat",
+        "CIRCUS VARIETY with Anja Schneider, Yetti Meißner and Monkeycircus",
+        "CIRCUS VARIETY with Anna Schreit, Acado, Tober & Tober"
+      ]
+    },
+    "lineUp": {
+      "type": "array",
+      "x-bsonType": "array",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.5714285714285714,
+        "count": 4
+      },
+      "items": {
+        "$ref": "#/$defs/ObjectId",
+        "x-bsonType": "objectId",
+        "x-metadata": {
+          "hasDuplicates": true,
+          "probability": 1,
+          "count": 7
+        },
+        "x-sampleValues": [
+          "647067e616d0658515ca8634",
+          "647067a516d0658515ca8630",
+          "647067e616d0658515ca8634",
+          "6470686616d0658515ca8640",
+          "6470681016d0658515ca8638",
+          "6470681016d0658515ca8638",
+          "647067e616d0658515ca8634"
+        ]
+      }
+    },
+    "location": {
+      "type": "string",
+      "x-bsonType": "string",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 1,
+        "count": 7
+      },
+      "x-sampleValues": [
+        "asdasd",
+        "Sturehof",
+        "asd",
+        "Berlin",
+        "Renate",
+        "",
+        "Renate"
+      ]
+    },
+    "ticketPrice": {
+      "type": "integer",
+      "x-bsonType": "int",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.42857142857142855,
+        "count": 3
+      },
+      "x-sampleValues": [
+        20,
+        20,
+        20
+      ]
+    },
+    "updatedAt": {
+      "$ref": "#/$defs/Date",
+      "x-bsonType": "date",
+      "x-metadata": {
+        "hasDuplicates": true,
+        "probability": 0.42857142857142855,
+        "count": 3
+      },
+      "x-sampleValues": [
+        "2024-07-24T11:24:10.237Z",
+        "2024-07-05T10:45:26.614Z",
+        "2024-07-24T11:16:14.654Z"
+      ]
+    }
+  },
+  "$defs": {
+    "ObjectId": {
+      "type": "object",
+      "properties": {
+        "$oid": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        }
+      },
+      "required": [
+        "$oid"
+      ],
+      "additionalProperties": false
+    },
+    "Date": {
+      "type": "object",
+      "properties": {
+        "$date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "$date"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
