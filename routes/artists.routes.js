@@ -1,42 +1,30 @@
-const router = require("express").Router();
-const Artist = require('../models/Artist.model');
-const { types } = require("mongoose");
-const { isAuthenticated } = require("../middleware/isAuthenticated");
+const router = require('express').Router();
+const Artist = require('../models/Artist.model.new');
+const { Op } = require('sequelize');
+const { isAuthenticated } = require('../middleware/isAuthenticated');
 
-router.get("/", async (req, res, next) => {
+// GET /artists
+router.get('/', async (req, res, next) => {
   try {
-    if (Object.keys(req.query).length === 0) {
-      const allArtists = await Artist.find().populate("artistName");
-      res.json(allArtists);
-    } else {
-      const artistNameRegex = new RegExp(req.query.artistName, "i");
-      const soundCloudUrlRegex = new RegExp(req.query.soundCloudUrl, "i");
-      const query = {
-        artistName: artistNameRegex,
-        soundCloudUrl: soundCloudUrlRegex,
-      };
+    const where = {};
+    if (req.query.artistName) where.artistName = { [Op.like]: `%${req.query.artistName}%` };
+    if (req.query.soundCloudUrl) where.soundCloudUrl = { [Op.like]: `%${req.query.soundCloudUrl}%` };
 
-      console.log(query);
-      const artists = await Artist.find(query).populate("artistName");
-
-      res.json(artists);
-    }
+    const artists = await Artist.findAll({ where });
+    res.json(artists);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send();
+    res.status(500).send();
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+// GET /artists/:id
+router.get('/:id', async (req, res, next) => {
   try {
     const artistId = req.params.id;
-    const artist = await Artist.findById(artistId).populate("artistName");
+    const artist = await Artist.findByPk(artistId);
 
-    if (!artist) {
-      // Handle case where artist is not found
-      return res.status(404).json({ error: "Artist not found" });
-    }
+    if (!artist) return res.status(404).json({ error: 'Artist not found' });
 
     res.json(artist);
   } catch (error) {
@@ -45,63 +33,42 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+// POST /artists/add
 router.post('/add', isAuthenticated, async (req, res, next) => {
   try {
-    const { 
-      artistName,
-      firstName,
-      lastName,
-      artistPicUrl,
-      soundCloudUrl,
-      beatPortUrl,
-      instagramUrl,
-      facebookUrl,
-      webPage, } = req.body
-    console.log(req.body)
-
-    const newArtist = new Artist({
-      artistName,
-      firstName,
-      lastName,
-      artistPicUrl,
-      soundCloudUrl,
-      beatPortUrl,
-      instagramUrl,
-      facebookUrl,
-      webPage,
-    })
-    const createdArtist = await newArtist.save()
-    res.status(201).json(createdArtist)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Failed to create artist'})
-  } 
-})
-
-router.delete("/:artistId", isAuthenticated, async (req, res, next) => {
-  try {
-    const { artistId } = req.params;
-    await Artist.findByIdAndDelete(artistId);
-    res.status(204);
+    const payload = req.body;
+    const createdArtist = await Artist.create(payload);
+    res.status(201).json(createdArtist);
   } catch (error) {
     console.error(error);
-    res.status(500);
-  } finally {
-    res.send();
+    res.status(500).json({ error: 'Failed to create artist' });
   }
 });
-router.put("/:artistId", isAuthenticated, async (req, res) => {
+
+// DELETE /artists/:artistId
+router.delete('/:artistId', isAuthenticated, async (req, res, next) => {
+  try {
+    const { artistId } = req.params;
+    await Artist.destroy({ where: { id: artistId } });
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send();
+  }
+});
+
+// PUT /artists/:artistId
+router.put('/:artistId', isAuthenticated, async (req, res) => {
   const { artistId } = req.params;
   const payload = req.body;
   try {
-    const updatedArtist = await Artist.findByIdAndUpdate(artistId, payload, {
-      new: true,
-    });
+    await Artist.update(payload, { where: { id: artistId } });
+    const updatedArtist = await Artist.findByPk(artistId);
     res.status(200).json(updatedArtist);
   } catch (error) {
     console.log(error);
+    res.status(500).send();
   }
 });
-
 
 module.exports = router;

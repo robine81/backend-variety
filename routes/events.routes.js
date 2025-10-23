@@ -1,91 +1,93 @@
-const router = require("express").Router();
-const { Types } = require("mongoose");
-const EventModel = require("../models/Event.models");
-const { startOfDay, endOfDay } = require("date-fns");
-const { isAuthenticated } = require("../middleware/isAuthenticated");
+const router = require('express').Router();
+const { Op } = require('sequelize');
+const Event = require('../models/Event.model.new');
+const Artist = require('../models/Artist.model.new');
+const { startOfDay, endOfDay } = require('date-fns');
+const { isAuthenticated } = require('../middleware/isAuthenticated');
 
-router.get("/", async (req, res, next) => {
+// GET /events
+router.get('/', async (req, res, next) => {
   try {
-    if (Object.keys(req.query).length === 0) {
-      const allEvents = await EventModel.find().populate("lineUp");
-      res.json(allEvents);
-    } else {
-      const eventNameRegex = new RegExp(req.query.eventName, "i");
-      const locationRegex = new RegExp(req.query.location, "i");
-      const query = {
-        eventName: eventNameRegex,
-        location: locationRegex,
-        ...(req.query.artistsid // Remove lineUp field when there is no artistid in query parameters
-          ? { lineUp: new Types.ObjectId(req.query.artistsid) }
-          : {}),
-        ...(req.query.date
-          ? {
-              // https://stackoverflow.com/a/27641025
-              date: {
-                $gte: startOfDay(new Date(req.query.date)),
-                $lte: endOfDay(new Date(req.query.date)),
-              },
-            }
-          : {}),
-      };
+    const where = {};
+    const include = [{ model: Artist, through: { attributes: [] } }];
 
-      console.log(query);
-      const events = await EventModel.find(query).populate("lineUp");
-
-      res.json(events);
+    if (req.query.eventName) {
+      where.eventName = { [Op.like]: `%${req.query.eventName}%` };
     }
+    if (req.query.location) {
+      where.location = { [Op.like]: `%${req.query.location}%` };
+    }
+    if (req.query.date) {
+      where.date = {
+        [Op.between]: [startOfDay(new Date(req.query.date)), endOfDay(new Date(req.query.date))],
+      };
+    }
+    if (req.query.artistsid) {
+      include[0].where = { id: req.query.artistsid };
+    }
+
+    const events = await Event.findAll({ where, include });
+    res.json(events);
   } catch (error) {
     console.error(error);
-    res.status(500);
-    res.send();
+    res.status(500).send();
   }
 });
 
-router.delete("/:eventId", isAuthenticated, async (req, res, next) => {
+// DELETE /events/:eventId
+router.delete('/:eventId', isAuthenticated, async (req, res, next) => {
   try {
     const { eventId } = req.params;
-    await EventModel.findByIdAndDelete(eventId);
-    res.status(204);
+    await Event.destroy({ where: { id: eventId } });
+    res.status(204).send();
   } catch (error) {
     console.error(error);
-    res.status(500);
-  } finally {
-    res.send();
+    res.status(500).send();
   }
 });
-router.put("/:eventId", isAuthenticated, async (req, res) => {
+
+// PUT /events/:eventId
+router.put('/:eventId', isAuthenticated, async (req, res) => {
   const { eventId } = req.params;
   const payload = req.body;
   try {
-    const updatedEvent = await EventModel.findByIdAndUpdate(eventId, payload, {
-      new: true,
-    });
+    await Event.update(payload, { where: { id: eventId } });
+    const updatedEvent = await Event.findByPk(eventId, { include: [{ model: Artist, through: { attributes: [] } }] });
     res.status(200).json(updatedEvent);
   } catch (error) {
     console.log(error);
+    res.status(500).send();
   }
 });
 
-router.post("/", isAuthenticated, async (req, res, next) => {
-  const payload = req.body;
-
+// POST /events
+router.post('/', isAuthenticated, async (req, res, next) => {
+  const payload = req.body; // may contain `artistIds` array
   try {
-    const addEvent = await EventModel.create(payload);
-    res.status(201).json(addEvent);
+    const { artistIds, ...eventData } = payload;
+    const addEvent = await Event.create(eventData);
+    if (artistIds && Array.isArray(artistIds)) {
+      const artists = await Artist.findAll({ where: { id: artistIds } });
+      await addEvent.addArtists(artists);
+    }
+    const created = await Event.findByPk(addEvent.id, { include: [{ model: Artist, through: { attributes: [] } }] });
+    res.status(201).json(created);
   } catch (error) {
     console.error(error);
-    res.status(500);
+    res.status(500).send();
   }
 });
 
-router.get("/:id", async (req, res) => {
+// GET /events/:id
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const oneEvent = await EventModel.findById(id).populate("lineUp");
+    const oneEvent = await Event.findByPk(id, { include: [{ model: Artist, through: { attributes: [] } }] });
+    if (!oneEvent) return res.status(404).json({ error: 'Event not found' });
     res.json(oneEvent);
   } catch (error) {
     console.error(error);
-    res.status(500);
+    res.status(500).send();
   }
 });
 

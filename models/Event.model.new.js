@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database"); // adjust path to your Sequelize instance
-const Artist = require("./Artist.model");
+const sequelize = require("../config/database"); 
+// Use the Sequelize-based Artist model
+const Artist = require("./Artist.model.new");
 
 const Event = sequelize.define("Event", {
   eventName: {
