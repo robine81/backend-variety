@@ -8,8 +8,8 @@ const sequelize = require("./config/database");
 
 // Load models so Sequelize knows about them
 require("./models/Artist.model");
-// require("./models/Event.model");
-// require("./models/User.model");
+require("./models/Event.model");
+require("./models/User.model");
 
 // Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
