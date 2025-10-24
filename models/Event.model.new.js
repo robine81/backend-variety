@@ -14,10 +14,12 @@ const Event = sequelize.define("Event", {
   },
   date: {
     type: DataTypes.DATE,
-    allowNull: false,
+    // allow nulls because some legacy Mongo exports may not have valid/parsable dates
+    allowNull: true,
   },
   artworkUrl: {
-    type: DataTypes.STRING,
+    // artwork can be a long base64 data URL or long url string
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   ticketPrice: {

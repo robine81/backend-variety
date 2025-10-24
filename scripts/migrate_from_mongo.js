@@ -77,6 +77,14 @@ async function main() {
     console.log('Dry run: skipping DB connection and writes');
   }
 
+  // If we're doing a real run, ensure tables exist / are synced. We use alter to avoid destructive
+  // drops; change to { force: true } only if you want to drop & recreate.
+  if (!dry) {
+    console.log('Syncing models to database (this may alter tables)...');
+    await sequelize.sync({ alter: true });
+    console.log('Models synced');
+  }
+
   // load data
   const users = await loadJson(usersPath);
   const artists = await loadJson(artistsPath);
@@ -118,7 +126,13 @@ async function main() {
         firstName: u.firstName || null,
         lastName: u.lastName || null,
       };
-      const created = await User.create(payload);
+      // skip if user with same email already exists (dedupe on reruns)
+      let created = await User.findOne({ where: { email: payload.email } });
+      if (created) {
+        console.log(`Skipping user (already exists): ${payload.email}`);
+      } else {
+        created = await User.create(payload);
+      }
       userIdMap.set(normalizeId(u._id), created.id);
     }
   }
@@ -142,7 +156,16 @@ async function main() {
         facebookUrl: a.facebookUrl || null,
         webPage: a.webPage || null,
       };
-      const created = await Artist.create(payload);
+      // try to find an existing artist by artistName to avoid duplicates on re-run
+      let created = null;
+      if (payload.artistName) {
+        created = await Artist.findOne({ where: { artistName: payload.artistName } });
+      }
+      if (created) {
+        console.log(`Skipping artist (already exists): ${payload.artistName}`);
+      } else {
+        created = await Artist.create(payload);
+      }
       artistIdMap.set(normalizeId(a._id), created.id);
     }
   }
@@ -160,10 +183,16 @@ async function main() {
   } else {
     console.log(`Importing ${events.length} events...`);
     for (const e of events) {
+      // parse date safely; if invalid, set to null
+      let parsedDate = null;
+      if (e.date) {
+        const d = new Date(e.date);
+        if (!isNaN(d.getTime())) parsedDate = d;
+      }
       const payload = {
         eventName: e.eventName,
         location: e.location || null,
-        date: e.date ? new Date(e.date) : null,
+        date: parsedDate,
         artworkUrl: e.artworkUrl || null,
         ticketPrice: e.ticketPrice || null,
       };

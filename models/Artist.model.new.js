@@ -15,7 +15,8 @@ const Artist = sequelize.define("Artist", {
     allowNull: true,
   },
   artistPicUrl: {
-    type: DataTypes.STRING,
+    // store large base64 images or long URLs; use long TEXT to avoid "Data too long" errors
+    type: DataTypes.TEXT('long'),
     allowNull: true,
   },
   soundCloudUrl: {
