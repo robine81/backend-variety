@@ -21,13 +21,23 @@ if (DATABASE_URL) {
   // 3) allow self-signed when DB_SSL_ALLOW_SELF_SIGNED=true (not recommended for production)
   if (process.env.DB_SSL_CA_BASE64) {
     try {
-      // Decode base64 -> PEM string, then pass as Buffer to the mysql2 driver.
-  const caPem = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
-  // mysql2 accepts `ca` as a string or Buffer; some environments work better with the PEM string.
-  // Try passing the PEM as a string first (works with mysql2 in many environments).
-  dialectOptions.ssl = { ca: caPem, rejectUnauthorized: true };
-      // indicate we have a CA configured (no secrets printed)
-      console.log('DB SSL: using provided CA certificate (DB_SSL_CA_BASE64)');
+      // Decode base64 -> Buffer. Pass the Buffer to the mysql2 driver so the TLS layer
+      // can verify the server certificate against the provided CA.
+      const caBuf = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64');
+
+      // mysql2 / node TLS generally accept `ca` as a Buffer, string, or array of Buffers.
+      // Try the Buffer form first (most reliable), and also provide an array fallback.
+      dialectOptions.ssl = { ca: caBuf, rejectUnauthorized: true };
+
+      // Some builds/environments expect an array of CAs. Do not overwrite the Buffer form
+      // if it's already set, but prepare an alternate form if needed by the driver.
+      if (!dialectOptions.ssl || !dialectOptions.ssl.ca) {
+        dialectOptions.ssl = { ca: [caBuf], rejectUnauthorized: true };
+      }
+
+      // indicate we have a CA configured (no secrets printed). Logging the byte length
+      // is safe and helpful for debugging.
+      console.log('DB SSL: using provided CA certificate (DB_SSL_CA_BASE64) - bytes:', caBuf.length);
     } catch (err) {
       console.warn('Failed to parse DB_SSL_CA_BASE64; falling back to default SSL behavior');
     }
