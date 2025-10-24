@@ -13,7 +13,8 @@ function getTokenFromHeaders(req) {
 }
 
 const isAuthenticated = expressjwt({
-  secret: process.env.TOKEN_SECRET,
+  // use JWT_SECRET env var (aligns with .env.example and hosting providers)
+  secret: process.env.JWT_SECRET || process.env.TOKEN_SECRET,
   algorithms: ["HS256"],
   requestProperty: "payload",
   getToken: getTokenFromHeaders,

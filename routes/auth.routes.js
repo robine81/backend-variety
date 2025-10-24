@@ -34,7 +34,9 @@ router.post('/login', async (req, res) => {
 
     if (potentialUser) {
       if (bcrypt.compareSync(req.body.password, potentialUser.password)) {
-        const authToken = jwt.sign({ userId: potentialUser.id }, process.env.TOKEN_SECRET, {
+        // prefer JWT_SECRET but fall back to TOKEN_SECRET for compatibility
+        const secret = process.env.JWT_SECRET || process.env.TOKEN_SECRET;
+        const authToken = jwt.sign({ userId: potentialUser.id }, secret, {
           algorithm: 'HS256',
           expiresIn: '6h',
         });

@@ -12,7 +12,7 @@ Migration from Mongo JSON exports to Sequelize (MySQL)
 - Or set the individual vars: `DB_NAME`, `DB_USER`, `DB_PASS`, `DB_HOST`, `DB_DIALECT`.
 - For local development you can place values in a `.env` file (the app loads it when NODE_ENV !== 'production').
 - Never commit `.env` to source control — `.gitignore` already excludes it.
-- Ensure `TOKEN_SECRET` env var is set when running the app if needed.
+- Ensure `JWT_SECRET` (or `TOKEN_SECRET` for backwards compatibility) env var is set when running the app if needed.
 
 3. Run the migration script
 ```bash
