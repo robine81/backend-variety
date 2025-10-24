@@ -15,9 +15,18 @@ if (DATABASE_URL) {
   // If you have to allow self-signed certs, set DB_SSL_ALLOW_SELF_SIGNED=true in env.
   const allowSelfSigned = process.env.DB_SSL_ALLOW_SELF_SIGNED === 'true';
   const dialectOptions = {};
-
-  // If the URL includes ssl-mode or the user requested SSL behavior, set dialectOptions.ssl
-  if (DATABASE_URL.includes('ssl-mode') || process.env.DB_SSL === 'true' || allowSelfSigned) {
+  // Priority for SSL handling (secure -> fallback):
+  // 1) DB_SSL_CA_BASE64 (base64-encoded CA certificate) -> use as `ca` and enforce verification
+  // 2) explicit DB_SSL=true or ssl-mode in URL -> verify by default unless allowSelfSigned
+  // 3) allow self-signed when DB_SSL_ALLOW_SELF_SIGNED=true (not recommended for production)
+  if (process.env.DB_SSL_CA_BASE64) {
+    try {
+      const ca = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
+      dialectOptions.ssl = { ca, rejectUnauthorized: true };
+    } catch (err) {
+      console.warn('Failed to parse DB_SSL_CA_BASE64; falling back to default SSL behavior');
+    }
+  } else if (DATABASE_URL.includes('ssl-mode') || process.env.DB_SSL === 'true' || allowSelfSigned) {
     dialectOptions.ssl = { rejectUnauthorized: !allowSelfSigned };
   }
 
