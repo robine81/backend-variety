@@ -23,6 +23,13 @@ if (DATABASE_URL) {
 
   const sequelize = new Sequelize(DATABASE_URL, {
     dialectOptions,
+    // pool sizing can be tuned via DB_POOL_MAX env var. Keep modest defaults for hosted DBs.
+    pool: {
+      max: Number(process.env.DB_POOL_MAX) || 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
     logging: false,
   });
 
@@ -46,6 +53,12 @@ if (DATABASE_URL) {
   const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASS, {
     host: DB_HOST,
     dialect: DB_DIALECT,
+    pool: {
+      max: Number(process.env.DB_POOL_MAX) || 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
     logging: false,
   });
 
