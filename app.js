@@ -6,10 +6,11 @@ require("dotenv").config();
 //require("./db");
 const sequelize = require("./config/database");
 
-// Load models so Sequelize knows about them
-require("./models/Artist.model");
-require("./models/Event.model");
-require("./models/User.model");
+// Load Sequelize models so they are registered with the `sequelize` instance.
+// We prefer the new Sequelize model files (suffix `.model.new.js`).
+require("./models/Artist.model.new");
+require("./models/Event.model.new");
+require("./models/User.model.new");
 
 // Handles http requests (express is node js framework)
 // https://www.npmjs.com/package/express
