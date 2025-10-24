@@ -21,8 +21,13 @@ if (DATABASE_URL) {
   // 3) allow self-signed when DB_SSL_ALLOW_SELF_SIGNED=true (not recommended for production)
   if (process.env.DB_SSL_CA_BASE64) {
     try {
-      const ca = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
-      dialectOptions.ssl = { ca, rejectUnauthorized: true };
+      // Decode base64 -> PEM string, then pass as Buffer to the mysql2 driver.
+      const caPem = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
+      const caBuf = Buffer.from(caPem, 'utf8');
+      // mysql2 accepts `ca` as a string, Buffer or array of Buffers. Use array for widest compatibility.
+      dialectOptions.ssl = { ca: [caBuf], rejectUnauthorized: true };
+      // indicate we have a CA configured (no secrets printed)
+      console.log('DB SSL: using provided CA certificate (DB_SSL_CA_BASE64)');
     } catch (err) {
       console.warn('Failed to parse DB_SSL_CA_BASE64; falling back to default SSL behavior');
     }
