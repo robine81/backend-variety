@@ -1,0 +1,11 @@
+# Example render service manifest. Adjust names and region as needed.
+services:
+  - type: web
+    name: backend-variety
+    env: docker
+    plan: starter
+    dockerfilePath: Dockerfile
+    # instance count, auto deploy from repo, and branch
+    autoDeploy: true
+    repo: robine81/backend-variety
+    branch: Migration_update
