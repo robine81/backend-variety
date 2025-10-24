@@ -22,10 +22,10 @@ if (DATABASE_URL) {
   if (process.env.DB_SSL_CA_BASE64) {
     try {
       // Decode base64 -> PEM string, then pass as Buffer to the mysql2 driver.
-      const caPem = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
-      const caBuf = Buffer.from(caPem, 'utf8');
-      // mysql2 accepts `ca` as a string, Buffer or array of Buffers. Use array for widest compatibility.
-      dialectOptions.ssl = { ca: [caBuf], rejectUnauthorized: true };
+  const caPem = Buffer.from(process.env.DB_SSL_CA_BASE64, 'base64').toString('utf8');
+  // mysql2 accepts `ca` as a string or Buffer; some environments work better with the PEM string.
+  // Try passing the PEM as a string first (works with mysql2 in many environments).
+  dialectOptions.ssl = { ca: caPem, rejectUnauthorized: true };
       // indicate we have a CA configured (no secrets printed)
       console.log('DB SSL: using provided CA certificate (DB_SSL_CA_BASE64)');
     } catch (err) {
